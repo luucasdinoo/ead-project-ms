@@ -2,6 +2,8 @@ server:
   port: 8087
 
 spring:
+  application:
+    name: ms-authuser
   datasource:
     url: jdbc:postgresql://localhost:5432/authuser-db
     username: docker
