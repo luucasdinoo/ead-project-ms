@@ -1,0 +1,32 @@
+version: '4.33.1'
+
+services:
+  postgres1:
+    container_name: ead-authuser-db
+    image: bitnami/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: authuser-db
+
+  postgres2:
+    container_name: ead-course-db
+    image: bitnami/postgresql
+    ports:
+      - "5433:5433"
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: course-db
+
+  postgres3:
+    container_name: ead-notification-db
+    image: bitnami/postgresql
+    ports:
+      - "5434:5434"
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: notification-db
