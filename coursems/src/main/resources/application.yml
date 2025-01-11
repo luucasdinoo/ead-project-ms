@@ -1,0 +1,17 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ms-course
+  datasource:
+    url: jdbc:postgresql://localhost:5433/course_db
+    username: docker
+    password: docker
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true

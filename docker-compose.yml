@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: authuser-db
+      POSTGRES_DB: authuser_db
 
   postgres2:
     container_name: ead-course-db
@@ -19,7 +19,7 @@ services:
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: course-db
+      POSTGRES_DB: course_db
 
   postgres3:
     container_name: ead-notification-db
@@ -29,4 +29,4 @@ services:
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: notification-db
+      POSTGRES_DB: notification_db
