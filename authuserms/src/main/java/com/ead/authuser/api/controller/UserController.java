@@ -6,6 +6,7 @@ import com.ead.authuser.domain.model.UserModel;
 import com.ead.authuser.domain.service.UserService;
 import com.ead.authuser.domain.repository.specs.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Log4j2
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -60,12 +62,15 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID userId){
+        log.debug("DELETE deleteUser userId received {}", userId);
         Optional<UserModel> userOpt = userService.findById(userId);
 
         if(!userOpt.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 
         userService.delete(userOpt.get());
+        log.debug("DELETE deleteUser userId {}", userId);
+        log.info("User deleted successfully userId {}", userId);
         return ResponseEntity.ok("User deleted successfully");
    }
 
@@ -73,6 +78,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@PathVariable UUID userId,
                                         @RequestBody @Validated(UserView.UserPut.class)
                                         @JsonView(UserView.UserPut.class) UserDTO dto){
+        log.debug("PUT updateUser userDTO received {}", dto.toString());
         Optional<UserModel> userOpt = userService.findById(userId);
 
         if(!userOpt.isPresent())
@@ -83,6 +89,8 @@ public class UserController {
         user.setCpf(dto.getCpf());
         user.setPhoneNumber(dto.getPhoneNumber());
         UserModel updatedUser = userService.save(user);
+        log.debug("PUT updateUser userId saved {}", updatedUser.getUserId());
+        log.info("User updated successfully userId {}", updatedUser.getUserId());
         return ResponseEntity.ok(updatedUser);
     }
 

@@ -5,7 +5,7 @@ spring:
   application:
     name: ms-authuser
   datasource:
-    url: jdbc:postgresql://localhost:5432/authuser-db
+    url: jdbc:postgresql://localhost:5432/authuser_db
     username: docker
     password: docker
   jpa:
@@ -15,3 +15,14 @@ spring:
     properties:
       hibernate:
         show_sql: true
+
+  output:
+    ansi:
+      enabled: always # Cores no terminal windows
+
+logging:
+  level:
+    com.ead: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
