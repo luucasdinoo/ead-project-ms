@@ -26,7 +26,7 @@ public class ModuleModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID modeuleId;
+    private UUID moduleId;
 
     @Column(nullable = false, length = 150)
     private String title;
@@ -35,7 +35,7 @@ public class ModuleModel implements Serializable {
     private String description;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @CreationTimestamp
     private LocalDateTime creationDate;
 

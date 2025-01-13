@@ -3,10 +3,15 @@ package com.ead.course.api.controller;
 import com.ead.course.api.model.ModuleDTO;
 import com.ead.course.domain.model.entity.CourseModel;
 import com.ead.course.domain.model.entity.ModuleModel;
+import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
 import com.ead.course.domain.service.interfaces.ModuleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,8 +69,10 @@ public class ModuleController {
     }
 
     @GetMapping("/courses/{courseId}/modules")
-    public ResponseEntity<List<ModuleModel>> getAllModules(@PathVariable UUID courseId){
-        return ResponseEntity.ok(moduleService.findAllByCourse(courseId));
+    public ResponseEntity<Page<ModuleModel>> getAllModules(@PathVariable UUID courseId, SpecificationTemplate.ModuleSpec spec,
+                                                           @PageableDefault(sort = "moduleId", direction = Sort.Direction.ASC) Pageable pageable){
+        Page<ModuleModel> modulePages = moduleService.findAllByCourse(SpecificationTemplate.moduleCourseId(courseId).and(spec), pageable);
+        return ResponseEntity.ok(modulePages);
     }
 
     @GetMapping("/courses/{courseId}/modules/{moduleId}")

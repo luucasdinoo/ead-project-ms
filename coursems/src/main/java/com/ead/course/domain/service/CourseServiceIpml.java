@@ -6,8 +6,12 @@ import com.ead.course.domain.model.entity.ModuleModel;
 import com.ead.course.domain.repository.CourseRepository;
 import com.ead.course.domain.repository.LessonRepository;
 import com.ead.course.domain.repository.ModuleRepository;
+import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +37,7 @@ public class CourseServiceIpml implements CourseService {
         List<ModuleModel> moduleList = moduleRepository.findAllModulesIntoCourse(courseModel.getCourseId());
         if (!moduleList.isEmpty()) {
             moduleList.forEach(module -> {
-                List<LessonModel> lessons = lessonRepository.findAllLessonsIntoModule(module.getModeuleId());
+                List<LessonModel> lessons = lessonRepository.findAllLessonsIntoModule(module.getModuleId());
                 if (!lessons.isEmpty()) {
                     lessonRepository.deleteAll(lessons);
                 }
@@ -55,7 +59,7 @@ public class CourseServiceIpml implements CourseService {
     }
 
     @Override
-    public List<CourseModel> findAll() {
-        return courseRepository.findAll();
+    public Page<CourseModel> findAll(Specification<CourseModel> spec, Pageable pageable) {
+        return courseRepository.findAll(spec, pageable);
     }
 }

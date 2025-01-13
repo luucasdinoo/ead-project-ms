@@ -2,9 +2,14 @@ package com.ead.course.api.controller;
 
 import com.ead.course.api.model.CourseDTO;
 import com.ead.course.domain.model.entity.CourseModel;
+import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,8 +61,9 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseModel>> getAllCourses(){
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll());
+    public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec,
+                                                           @PageableDefault(sort = "courseId", direction = Sort.Direction.ASC) Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(spec, pageable));
     }
 
     @GetMapping("/{courseId}")

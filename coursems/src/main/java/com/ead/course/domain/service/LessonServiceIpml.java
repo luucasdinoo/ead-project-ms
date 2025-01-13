@@ -4,6 +4,9 @@ import com.ead.course.domain.model.entity.LessonModel;
 import com.ead.course.domain.repository.LessonRepository;
 import com.ead.course.domain.service.interfaces.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,5 +39,10 @@ public class LessonServiceIpml implements LessonService {
     @Override
     public List<LessonModel> findAllByModule(UUID moduleId) {
         return lessonRepository.findAllLessonsIntoModule(moduleId);
+    }
+
+    @Override
+    public Page<LessonModel> findAllByModule(Specification<LessonModel> spec, Pageable pageable) {
+        return lessonRepository.findAll(spec, pageable);
     }
 }
