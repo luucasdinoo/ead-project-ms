@@ -1,4 +1,4 @@
-package com.ead.course.api.model;
+package com.ead.authuser.api.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +8,10 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class SubscriptionDTO {
+public class UserCourseDto {
+
+    private UUID userId;
 
     @NotNull
-    private UUID userId;
+    private UUID courseId;
 }

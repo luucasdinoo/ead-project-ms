@@ -27,6 +27,7 @@ public class LessonServiceIpml implements LessonService {
     }
 
     @Override
+    @Transactional
     public LessonModel save(LessonModel lesson) {
         return lessonRepository.save(lesson);
     }

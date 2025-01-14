@@ -1,15 +1,16 @@
 package com.ead.course.api.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class SubscriptionDTO {
+@AllArgsConstructor
+public class CourseUserDTO {
 
-    @NotNull
+    private UUID courseId;
     private UUID userId;
 }
