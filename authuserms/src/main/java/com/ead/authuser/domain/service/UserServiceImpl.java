@@ -2,6 +2,7 @@ package com.ead.authuser.domain.service;
 
 import com.ead.authuser.domain.model.UserModel;
 import com.ead.authuser.domain.repository.UserRepository;
+import com.ead.authuser.domain.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

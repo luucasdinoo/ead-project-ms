@@ -3,15 +3,13 @@ package com.ead.authuser.api.controller;
 import com.ead.authuser.api.model.dto.UserDTO;
 import com.ead.authuser.api.model.view.UserView;
 import com.ead.authuser.domain.model.UserModel;
-import com.ead.authuser.domain.service.UserService;
 import com.ead.authuser.domain.repository.specs.SpecificationTemplate;
+import com.ead.authuser.domain.service.interfaces.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +33,14 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
-            @PageableDefault(sort = "userId", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<UserModel> userPage = userService.findAll(spec, pageable);
+                                                       Pageable pageable, @RequestParam(required = false) UUID courseId) {
+        Page<UserModel> userPage = null;
+        if (courseId != null) {
+            userPage =  userService.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable);
+        } else {
+            userPage = userService.findAll(spec, pageable);
+        }
+
         if (!userPage.isEmpty()){
             userPage.forEach(user -> {
                 user.add(linkTo(methodOn(UserController.class)

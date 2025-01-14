@@ -1,4 +1,4 @@
-package com.ead.authuser.domain.service;
+package com.ead.authuser.domain.service.interfaces;
 
 import com.ead.authuser.domain.model.UserModel;
 import org.springframework.data.domain.Page;

@@ -5,7 +5,7 @@ import com.ead.authuser.api.model.view.UserView;
 import com.ead.authuser.domain.model.UserModel;
 import com.ead.authuser.domain.model.enums.UserStatus;
 import com.ead.authuser.domain.model.enums.UserType;
-import com.ead.authuser.domain.service.UserService;
+import com.ead.authuser.domain.service.interfaces.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
