@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/courses/{courseId}/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CourseUserController {
 
@@ -35,14 +34,18 @@ public class CourseUserController {
     @Autowired
     private CourseUserService courseUserService;
 
-    @GetMapping
-    public ResponseEntity<Page<UserDTO>> getAllUsersByCourse(@PathVariable("courseId") UUID courseId,
+    @GetMapping("/courses/{courseId}/users")
+    public ResponseEntity<?> getAllUsersByCourse(@PathVariable("courseId") UUID courseId,
                                                                @PageableDefault(sort = "userId") Pageable pageable) {
+        Optional<CourseModel> courseOpt = courseService.findById(courseId);
+        if (courseOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found");
+        }
         Page<UserDTO> dtoPages = authUserClient.getAllUsersByCourse(courseId, pageable);
         return ResponseEntity.ok(dtoPages);
     }
 
-    @PostMapping("/subscription")
+    @PostMapping("/courses/{courseId}/users/subscription")
     public ResponseEntity<?> saveSubscriptionUserInCourse(@PathVariable UUID courseId,
                                                           @RequestBody @Valid SubscriptionDTO subscriptionDTO){
         ResponseEntity<UserDTO> responseUser;
@@ -67,5 +70,14 @@ public class CourseUserController {
                 .saveAndSendSubscriptionUserInCourse(courseOpt.get().convertToCourseUserModel(subscriptionDTO.getUserId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(courseUserModel);
+    }
+
+    @DeleteMapping("/courses/users/{userId}")
+    public ResponseEntity<?> deleteUserInCourse(@PathVariable UUID userId) {
+        if (!courseUserService.existsByUserId(userId)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CourseUser not found");
+        }
+        courseUserService.deleteCourseUserByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body("CourseUser deleted successfully");
     }
 }

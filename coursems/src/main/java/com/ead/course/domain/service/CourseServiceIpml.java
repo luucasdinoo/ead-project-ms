@@ -10,6 +10,7 @@ import com.ead.course.domain.repository.LessonRepository;
 import com.ead.course.domain.repository.ModuleRepository;
 import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
+import com.ead.course.infra.clients.AuthUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,9 +37,13 @@ public class CourseServiceIpml implements CourseService {
     @Autowired
     private CourseUserRepository courseUserRepository;
 
+    @Autowired
+    private AuthUserClient authUserClient;
+
     @Override
     @Transactional
     public void delete(CourseModel courseModel) {
+        boolean deleteCourseUserInAuthUser = false;
         List<ModuleModel> moduleList = moduleRepository.findAllModulesIntoCourse(courseModel.getCourseId());
         if (!moduleList.isEmpty()) {
             moduleList.forEach(module -> {
@@ -52,8 +57,12 @@ public class CourseServiceIpml implements CourseService {
         List<CourseUserModel> courseUserModels = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
         if (!courseUserModels.isEmpty()) {
             courseUserRepository.deleteAll(courseUserModels);
+            deleteCourseUserInAuthUser = true;
         }
         courseRepository.delete(courseModel);
+        if (deleteCourseUserInAuthUser) {
+            authUserClient.deleteCourseInAuthUser(courseModel.getCourseId());
+        }
     }
 
     @Override
