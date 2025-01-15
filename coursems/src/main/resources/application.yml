@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ms-course
+    name: ead-course-service
   datasource:
     url: jdbc:postgresql://localhost:5433/course_db
     username: docker
@@ -25,4 +25,11 @@ logging:
 ead:
   api:
     url:
-      auth-user: 'http://localhost:8087'
+      auth-user: 'http://ead-authuser-service'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost

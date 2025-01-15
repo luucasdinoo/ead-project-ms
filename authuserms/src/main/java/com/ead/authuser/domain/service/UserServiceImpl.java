@@ -1,6 +1,8 @@
 package com.ead.authuser.domain.service;
 
+import com.ead.authuser.domain.model.UserCourseModel;
 import com.ead.authuser.domain.model.UserModel;
+import com.ead.authuser.domain.repository.UserCourseRepository;
 import com.ead.authuser.domain.repository.UserRepository;
 import com.ead.authuser.domain.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserCourseRepository userCourseRepository;
+
     @Override
     public List<UserModel> findAll() {
         return userRepository.findAll();
@@ -33,6 +38,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(UserModel user) {
+        List<UserCourseModel> userCourseModels = userCourseRepository.findAllUserCourseIntoUser(user.getUserId());
+        if (!userCourseModels.isEmpty()) {
+            userCourseRepository.deleteAll(userCourseModels);
+
+        }
         userRepository.delete(user);
     }
 

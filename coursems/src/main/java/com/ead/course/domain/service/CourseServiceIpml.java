@@ -1,9 +1,11 @@
 package com.ead.course.domain.service;
 
 import com.ead.course.domain.model.entity.CourseModel;
+import com.ead.course.domain.model.entity.CourseUserModel;
 import com.ead.course.domain.model.entity.LessonModel;
 import com.ead.course.domain.model.entity.ModuleModel;
 import com.ead.course.domain.repository.CourseRepository;
+import com.ead.course.domain.repository.CourseUserRepository;
 import com.ead.course.domain.repository.LessonRepository;
 import com.ead.course.domain.repository.ModuleRepository;
 import com.ead.course.domain.repository.specs.SpecificationTemplate;
@@ -31,6 +33,9 @@ public class CourseServiceIpml implements CourseService {
     @Autowired
     private LessonRepository lessonRepository;
 
+    @Autowired
+    private CourseUserRepository courseUserRepository;
+
     @Override
     @Transactional
     public void delete(CourseModel courseModel) {
@@ -43,6 +48,10 @@ public class CourseServiceIpml implements CourseService {
                 }
             });
             moduleRepository.deleteAll(moduleList);
+        }
+        List<CourseUserModel> courseUserModels = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
+        if (!courseUserModels.isEmpty()) {
+            courseUserRepository.deleteAll(courseUserModels);
         }
         courseRepository.delete(courseModel);
     }

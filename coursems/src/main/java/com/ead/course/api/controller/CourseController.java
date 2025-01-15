@@ -1,6 +1,7 @@
 package com.ead.course.api.controller;
 
 import com.ead.course.api.model.CourseDTO;
+import com.ead.course.core.validation.CourseValidator;
 import com.ead.course.domain.model.entity.CourseModel;
 import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,8 +28,15 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private CourseValidator courseValidator;
+
     @PostMapping
-    public ResponseEntity<?> saveCourse(@RequestBody @Valid CourseDTO dto){
+    public ResponseEntity<?> saveCourse(@RequestBody CourseDTO dto, Errors errors){
+        courseValidator.validate(dto, errors);
+        if (errors.hasErrors()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
+        }
         var course = new CourseModel();
         BeanUtils.copyProperties(dto, course);
         CourseModel savedCourse = courseService.save(course);
