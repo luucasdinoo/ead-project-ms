@@ -33,7 +33,6 @@ public class InstructorController {
             userModel.setUserType(UserType.INSTRUCTOR);
             userService.save(userModel);
             return ResponseEntity.ok().body(userModel);
-
         }
     }
 }
