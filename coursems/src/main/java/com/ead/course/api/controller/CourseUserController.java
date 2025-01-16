@@ -2,9 +2,12 @@ package com.ead.course.api.controller;
 
 import com.ead.course.api.model.SubscriptionDTO;
 import com.ead.course.domain.model.entity.CourseModel;
+import com.ead.course.domain.model.entity.UserModel;
+import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
 import com.ead.course.domain.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -27,13 +30,14 @@ public class CourseUserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getAllUsersByCourse(@PathVariable("courseId") UUID courseId,
-                                                               @PageableDefault(sort = "userId") Pageable pageable) {
+    public ResponseEntity<?> getAllUsersByCourse(SpecificationTemplate.UserSpec spec, @PathVariable("courseId") UUID courseId,
+                                                 @PageableDefault(sort = "userId") Pageable pageable) {
         Optional<CourseModel> courseOpt = courseService.findById(courseId);
         if (courseOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("");
+        Page<UserModel> coursePage = userService.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(coursePage);
     }
 
     @PostMapping("/subscription")
