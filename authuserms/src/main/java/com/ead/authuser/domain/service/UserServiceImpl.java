@@ -1,8 +1,10 @@
 package com.ead.authuser.domain.service;
 
 import com.ead.authuser.domain.model.UserModel;
+import com.ead.authuser.domain.model.enums.ActionType;
 import com.ead.authuser.domain.repository.UserRepository;
 import com.ead.authuser.domain.service.interfaces.UserService;
+import com.ead.authuser.infra.queue.publisher.UserEventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserEventPublisher userEventPublisher;
 
     @Override
     public List<UserModel> findAll() {
@@ -56,5 +61,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(UserModel user) {
+        delete(user);
+        userEventPublisher.publishUserEvent(user.convertToUserEventDTO(), ActionType.DELETE);
+    }
+
+    @Transactional
+    @Override
+    public UserModel updateUser(UserModel user) {
+        UserModel saveUser = save(user);
+        userEventPublisher.publishUserEvent(saveUser.convertToUserEventDTO(), ActionType.UPDATE);
+        return user;    }
+
+    @Transactional
+    @Override
+    public UserModel updatePassword(UserModel user) {
+        return save(user);
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel user) {
+        UserModel saveUser = save(user);
+        userEventPublisher.publishUserEvent(saveUser.convertToUserEventDTO(), ActionType.CREATE);
+        return user;
     }
 }

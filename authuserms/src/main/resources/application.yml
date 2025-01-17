@@ -17,6 +17,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  rabbitmq:
+    addresses: ${RABBIT_MQ_ADDRESS}
 
   output:
     ansi:
@@ -33,6 +35,9 @@ ead:
   api:
     url:
       course: 'http://ead-course-service/ead-course/'
+  broker:
+    exchange:
+      user-event: ead.userevent
 
 eureka:
   client:

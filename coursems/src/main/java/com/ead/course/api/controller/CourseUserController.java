@@ -3,6 +3,7 @@ package com.ead.course.api.controller;
 import com.ead.course.api.model.SubscriptionDTO;
 import com.ead.course.domain.model.entity.CourseModel;
 import com.ead.course.domain.model.entity.UserModel;
+import com.ead.course.domain.model.enums.UserStatus;
 import com.ead.course.domain.repository.specs.SpecificationTemplate;
 import com.ead.course.domain.service.interfaces.CourseService;
 import com.ead.course.domain.service.interfaces.UserService;
@@ -47,8 +48,14 @@ public class CourseUserController {
         if (courseOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found");
         }
-        // TODO
-        return ResponseEntity.status(HttpStatus.CREATED).body("courseUserModel");
+        if (courseService.existByCourseAndUser(courseId, subscriptionDTO.getUserId())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Subscription already exists");
+        }
+        Optional<UserModel> userOpt = userService.findById(subscriptionDTO.getUserId());
+        if (userOpt.get().getUserStatus().equals(UserStatus.BLOCKED.toString())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User is Blocked");
+        }
+        courseService.saveSubscriptionUserInCourse(courseOpt.get().getCourseId(), userOpt.get().getUserId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Subscription Created Successfully");
     }
-
 }

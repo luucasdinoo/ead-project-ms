@@ -26,7 +26,7 @@ public class UserCourseController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users/{userId}/courses")
+    @GetMapping
     public ResponseEntity<?> getAllCoursesByUser(@PathVariable("userId") UUID userId,
                                                                @PageableDefault(sort = "courseId") Pageable pageable) {
         Optional<UserModel> optionalUserModel = userService.findById(userId);

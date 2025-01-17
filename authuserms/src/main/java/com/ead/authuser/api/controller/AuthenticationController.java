@@ -41,7 +41,7 @@ public class AuthenticationController {
         BeanUtils.copyProperties(dto, user);
         user.setUserStatus(UserStatus.ACTIVE);
         user.setUserType(UserType.STUDENT);
-        UserModel savedUser = userService.save(user);
+        UserModel savedUser = userService.saveUser(user);
         log.debug("POST registerUser userId saved {}", savedUser.getUserId());
         log.info("User saved successfully userId {}", savedUser.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);

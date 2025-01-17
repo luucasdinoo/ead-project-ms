@@ -17,6 +17,9 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  rabbitmq:
+    addresses: ${RABBIT_MQ_ADDRESS}
+
 logging:
   level:
     com.ead: TRACE
@@ -28,6 +31,12 @@ ead:
   api:
     url:
       auth-user: 'http://ead-authuser-service/ead-authuser/'
+  broker:
+    exchange:
+      user-event-exchange: ead.userevent
+    queue:
+      user-event-queue:
+        name: ead.userevent.ms.course
 
 eureka:
   client:
